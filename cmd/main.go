@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	task1 "init_project/pkg/goTask1"
-	task2 "init_project/pkg/goTask2"
 	"time"
+
+	task1 "github.com/Haley01114/init_project/pkg/goTask1"
+	task2 "github.com/Haley01114/init_project/pkg/goTask2"
 )
 
 func main() {
