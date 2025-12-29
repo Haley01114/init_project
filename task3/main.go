@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Haley01114/init_project/pkg/gorm/task/task3"
+	task "github.com/Haley01114/init_project/task3/pkg"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -14,20 +14,20 @@ func main() {
 	}
 
 	// 建表
-	task3.CreateTable(db)
+	task.CreateTable(db)
 
 	// 初始化数据
-	task3.InitData(db)
+	task.InitData(db)
 
 	// 关联查询：1.1.查询一个用户：所有文章、评论信息
-	task3.QueryOneUser(db)
+	task.QueryOneUser(db)
 	// 关联查询：1.2.查询所有用户：所有文章、评论信息
-	// task3.QueryAllUser(db)
+	// task.QueryAllUser(db)
 	// 关联查询：2.查询评论数量最多的文章信息
-	task3.QueryPostByCount(db)
+	task.QueryPostByCount(db)
 
 	// 钩子函数：1.创建文章时，更新对应用户的文章数量字段 => AfterCreate
 	// 钩子函数：2.删除评论时，如果评论数量为0，则更新文章的评论状态为“无评论”
 	// 删除一个评论数量为1的评论，测试钩子函数2
-	task3.DeleteCommentByID(db)
+	task.DeleteCommentByID(db)
 }

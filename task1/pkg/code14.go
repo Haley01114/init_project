@@ -1,4 +1,4 @@
-package goTask1
+package task
 
 import "strings"
 

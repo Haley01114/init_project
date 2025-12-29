@@ -1,4 +1,4 @@
-package task3
+package task
 
 import (
 	"fmt"
@@ -32,13 +32,15 @@ type Comment struct {
 	Post   Post `gorm:"foreignkey:PostID"`
 }
 
-// 博客系统
-// 建表
+// CreateTable 博客系统
 func CreateTable(db *gorm.DB) {
-	db.AutoMigrate(&User{}, &Post{}, &Comment{})
+	err := db.AutoMigrate(&User{}, &Post{}, &Comment{})
+	if err != nil {
+		return
+	}
 }
 
-// 初始化数据
+// InitData 初始化数据
 func InitData(db *gorm.DB) {
 	users := []User{
 		{Name: "张三", PostsCount: 2},
@@ -67,7 +69,7 @@ func InitData(db *gorm.DB) {
 	db.Create(&comments)
 }
 
-// 查询一个用户：所有文章、评论信息
+// QueryOneUser 查询一个用户：所有文章、评论信息
 func QueryOneUser(db *gorm.DB) {
 	var user User
 	db.Debug().Preload("Posts.Comments").Find(&user, 1)
@@ -80,7 +82,7 @@ func QueryOneUser(db *gorm.DB) {
 	}
 }
 
-// 查询所有用户：所有文章、评论信息
+// QueryAllUser 查询所有用户：所有文章、评论信息
 func QueryAllUser(db *gorm.DB) {
 	var users []User
 	db.Debug().Preload("Posts.Comments").Find(&users)
@@ -95,7 +97,7 @@ func QueryAllUser(db *gorm.DB) {
 	}
 }
 
-// 查询 评论数量最多 的文章
+// QueryPostByCount 查询 评论数量最多 的文章
 func QueryPostByCount(db *gorm.DB) {
 	var post Post
 	db.Debug().Model(&Post{}).
@@ -115,7 +117,7 @@ func QueryPostByCount(db *gorm.DB) {
 // 	return
 // }
 
-// 钩子函数：2.删除评论时，如果评论数量为0，则更新文章的评论状态为“无评论”
+// AfterDelete 钩子函数：2.删除评论时，如果评论数量为0，则更新文章的评论状态为“无评论”
 func (c *Comment) AfterDelete(tx *gorm.DB) (err error) {
 	// 如果评论数量 > 0，就将先将评论数量减一
 	tx.Model(&Post{}).
@@ -132,7 +134,7 @@ func (c *Comment) AfterDelete(tx *gorm.DB) (err error) {
 	return
 }
 
-// 删除一个评论数量为1的评论，测试钩子函数2
+// DeleteCommentByID 删除一个评论数量为1的评论，测试钩子函数2
 func DeleteCommentByID(db *gorm.DB) {
 	// 先查询一下，不然Comment中没有PostID，影响钩子函数
 	var comment Comment
